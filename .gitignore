@@ -1,0 +1,28 @@
+# Git Ignore for MyHealth Hub Workspace
+
+# Flutter / Dart
+mobile/.dart_tool/
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+mobile/.idea/
+mobile/.vscode/
+mobile/*.iml
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/app/build/
+
+# .NET / C#
+backend/bin/
+backend/obj/
+backend/out/
+backend/*.user
+backend/*.userosscache
+backend/*.sln.docstates
+backend/appsettings.Development.json
+backend/appsettings.Production.json
+
+# System & IDE
+.DS_Store
+Thumbs.db
+*.log
