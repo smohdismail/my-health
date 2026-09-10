@@ -12,6 +12,11 @@ class DashboardView extends GetView<DashboardController> {
         title: const Text("Health Overview"),
         actions: [
           IconButton(
+            icon: const Icon(Icons.person_outline_rounded),
+            onPressed: () => Get.toNamed('/profile'),
+            tooltip: "User Profile",
+          ),
+          IconButton(
             icon: const Icon(Icons.tune_rounded),
             onPressed: () => _showFilterDialog(context),
             tooltip: "Filter Date Range",

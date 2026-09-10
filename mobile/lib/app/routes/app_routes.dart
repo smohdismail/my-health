@@ -22,4 +22,5 @@ abstract class Routes {
   static const REPORTS = '/reports';
   static const AI_ASSISTANT = '/ai_assistant';
   static const SETTINGS = '/settings';
+  static const PROFILE = '/profile';
 }

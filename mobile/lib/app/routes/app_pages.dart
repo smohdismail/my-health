@@ -8,6 +8,7 @@ import '../modules/timeline/timeline_view.dart';
 import '../modules/reports/reports_view.dart';
 import '../modules/ai_assistant/ai_assistant_view.dart';
 import '../modules/settings/settings_view.dart';
+import '../modules/profile/profile_view.dart';
 
 part 'app_routes.dart';
 
@@ -48,6 +49,10 @@ class AppPages {
     GetPage(
       name: Routes.SETTINGS,
       page: () => const SettingsView(),
+    ),
+    GetPage(
+      name: Routes.PROFILE,
+      page: () => const ProfileView(),
     ),
   ];
 }

@@ -22,6 +22,7 @@ import 'app/modules/ai_assistant/ai_assistant_controller.dart';
 import 'app/modules/ai_assistant/ai_assistant_view.dart';
 import 'app/modules/settings/settings_controller.dart';
 import 'app/modules/settings/settings_view.dart';
+import 'app/modules/profile/profile_controller.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async {
@@ -58,6 +59,7 @@ void main() async {
     repository: repository,
     authController: authController,
   ));
+  Get.put(ProfileController(repository: repository, authController: authController));
 
   runApp(const MyHealthApp());
 }
