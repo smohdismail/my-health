@@ -162,6 +162,57 @@ class ReproductiveController extends GetxController {
     Get.snackbar("Success", "Hormone result recorded successfully.", backgroundColor: Colors.purple, colorText: Colors.white);
   }
 
+  Future<void> loadSampleWhoDemoData() async {
+    final userId = authController.currentUserId.value;
+    if (userId.isEmpty) return;
+
+    final now = DateTime.now();
+
+    // Test 1: 3 months ago (baseline)
+    final record1 = SemenAnalysisTableCompanion(
+      id: drift.Value(const Uuid().v4()),
+      userId: drift.Value(userId),
+      collectionDate: drift.Value(now.subtract(const Duration(days: 90))),
+      analysisDate: drift.Value(now.subtract(const Duration(days: 90))),
+      volumeMl: const drift.Value(2.5),
+      concentrationMPerMl: const drift.Value(38.0),
+      totalCountM: const drift.Value(95.0),
+      progressiveMotilityPct: const drift.Value(36.0),
+      nonProgressiveMotilityPct: const drift.Value(10.0),
+      immotilePct: const drift.Value(54.0),
+      totalMotilityPct: const drift.Value(46.0),
+      morphologyPct: const drift.Value(4.5),
+      vitalityPct: const drift.Value(65.0),
+      ph: const drift.Value(7.6),
+      labName: const drift.Value("Central Clinical Laboratory"),
+      notes: const drift.Value("Baseline WHO 5th Edition Evaluation"),
+    );
+
+    // Test 2: Recent follow-up
+    final record2 = SemenAnalysisTableCompanion(
+      id: drift.Value(const Uuid().v4()),
+      userId: drift.Value(userId),
+      collectionDate: drift.Value(now.subtract(const Duration(days: 10))),
+      analysisDate: drift.Value(now.subtract(const Duration(days: 10))),
+      volumeMl: const drift.Value(3.1),
+      concentrationMPerMl: const drift.Value(48.0),
+      totalCountM: const drift.Value(148.8),
+      progressiveMotilityPct: const drift.Value(43.0),
+      nonProgressiveMotilityPct: const drift.Value(12.0),
+      immotilePct: const drift.Value(45.0),
+      totalMotilityPct: const drift.Value(55.0),
+      morphologyPct: const drift.Value(5.5),
+      vitalityPct: const drift.Value(72.0),
+      ph: const drift.Value(7.5),
+      labName: const drift.Value("Andrology Specialist Lab"),
+      notes: const drift.Value("Follow-up test after 90 days lifestyle optimization"),
+    );
+
+    await repository.addSemenAnalysis(record1);
+    await repository.addSemenAnalysis(record2);
+    Get.snackbar("Sample Data Loaded", "WHO Benchmark sample laboratory tests populated successfully.", backgroundColor: Colors.purple, colorText: Colors.white);
+  }
+
   void _clearSemenForm() {
     volumeController.clear();
     concentrationController.clear();

@@ -1,5 +1,13 @@
 import 'package:health/health.dart';
 
+class HealthConnectResult {
+  final bool isSuccess;
+  final String message;
+  final int recordCount;
+
+  HealthConnectResult({required this.isSuccess, required this.message, this.recordCount = 0});
+}
+
 class HealthConnectDataPoint {
   final String type;
   final double value;
@@ -34,17 +42,32 @@ class HealthConnectService {
 
   Future<bool> isHealthConnectAvailable() async {
     try {
-      return await _health.hasPermissions(_types) ?? false;
+      final hasPerms = await _health.hasPermissions(_types);
+      return hasPerms ?? false;
     } catch (_) {
       return false;
     }
   }
 
-  Future<bool> requestPermissions() async {
+  Future<HealthConnectResult> requestPermissionsDetailed() async {
     try {
-      return await _health.requestAuthorization(_types);
-    } catch (_) {
-      return false;
+      final isAuthorized = await _health.requestAuthorization(_types);
+      if (isAuthorized) {
+        return HealthConnectResult(
+          isSuccess: true,
+          message: "Health Connect permissions granted successfully.",
+        );
+      } else {
+        return HealthConnectResult(
+          isSuccess: false,
+          message: "Health Connect permissions were denied. Ensure Health Connect APK is installed from Play Store.",
+        );
+      }
+    } catch (e) {
+      return HealthConnectResult(
+        isSuccess: false,
+        message: "Health Connect error: ${e.toString()}",
+      );
     }
   }
 
@@ -54,9 +77,6 @@ class HealthConnectService {
   }) async {
     final List<HealthConnectDataPoint> points = [];
     try {
-      final hasPermission = await _health.hasPermissions(_types) ?? false;
-      if (!hasPermission) return points;
-
       final List<HealthDataPoint> data = await _health.getHealthDataFromTypes(
         types: _types,
         startTime: startDate,

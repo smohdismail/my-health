@@ -47,7 +47,7 @@ class ReproductiveView extends GetView<ReproductiveController> {
                 const SizedBox(width: 8),
                 const Expanded(
                   child: Text(
-                    "Recorded values preserve your laboratory results. AI trend observations do not replace medical evaluation.",
+                    "Recorded values preserve original laboratory reports. AI observations do not replace medical evaluation.",
                     style: TextStyle(fontSize: 12, color: Colors.purple),
                   ),
                 ),
@@ -56,20 +56,60 @@ class ReproductiveView extends GetView<ReproductiveController> {
           ),
           Expanded(
             child: records.isEmpty
-                ? Center(
+                ? SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.science_outlined, size: 64, color: Colors.grey.shade400),
-                        const SizedBox(height: 12),
-                        const Text("No Semen Analysis Entries Recorded", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                        const SizedBox(height: 4),
-                        const Text("Log your laboratory results to track 3/6/12 month parameters."),
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Icon(Icons.menu_book_rounded, color: Colors.purple),
+                                    SizedBox(width: 8),
+                                    Text("WHO Reference Benchmark Limits", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.purple)),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                const Text("If you do not have a physical laboratory report yet, here are standard WHO 5th/6th Edition reference lower limits for health guidance:"),
+                                const Divider(height: 16),
+                                _buildWhoBenchmarkRow("Semen Volume", "≥ 1.4 - 1.5 mL"),
+                                _buildWhoBenchmarkRow("Sperm Concentration", "≥ 15 - 16 Million/mL"),
+                                _buildWhoBenchmarkRow("Total Sperm Count", "≥ 39 Million per ejaculate"),
+                                _buildWhoBenchmarkRow("Progressive Motility", "≥ 30 - 32%"),
+                                _buildWhoBenchmarkRow("Total Motility", "≥ 40 - 42%"),
+                                _buildWhoBenchmarkRow("Normal Morphology", "≥ 4% (Kruger Strict Criteria)"),
+                              ],
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 16),
-                        ElevatedButton.icon(
-                          onPressed: () => Get.to(() => const SemenFormView()),
-                          icon: const Icon(Icons.add),
-                          label: const Text("Add Semen Analysis"),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () => Get.to(() => const SemenFormView()),
+                                icon: const Icon(Icons.add_rounded),
+                                label: const Text("Enter Lab Report"),
+                                style: ElevatedButton.styleFrom(backgroundColor: Colors.purple.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14)),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: controller.loadSampleWhoDemoData,
+                                icon: const Icon(Icons.science_rounded),
+                                label: const Text("Load Sample Data"),
+                                style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -96,7 +136,7 @@ class ReproductiveView extends GetView<ReproductiveController> {
                               ),
                               const Divider(),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   _buildStatColumn("Volume", "${r.volumeMl ?? '--'} mL"),
                                   _buildStatColumn("Concentration", "${r.concentrationMPerMl ?? '--'} M/mL"),
@@ -105,7 +145,7 @@ class ReproductiveView extends GetView<ReproductiveController> {
                               ),
                               const SizedBox(height: 12),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   _buildStatColumn("Prog Motility", "${r.progressiveMotilityPct ?? '--'}%"),
                                   _buildStatColumn("Total Motility", "${r.totalMotilityPct ?? '--'}%"),
@@ -123,21 +163,35 @@ class ReproductiveView extends GetView<ReproductiveController> {
                     },
                   ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => Get.to(() => const SemenFormView()),
-                icon: const Icon(Icons.add_rounded),
-                label: const Text("Record Laboratory Semen Analysis"),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.purple.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14)),
+          if (records.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => Get.to(() => const SemenFormView()),
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text("Record Laboratory Semen Analysis"),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.purple.shade800, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14)),
+                ),
               ),
             ),
-          ),
         ],
       );
     });
+  }
+
+  Widget _buildWhoBenchmarkRow(String param, String limit) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(param, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+          Text(limit, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.purple)),
+        ],
+      ),
+    );
   }
 
   Widget _buildHormonesTab(BuildContext context) {

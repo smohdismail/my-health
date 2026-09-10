@@ -72,11 +72,23 @@ class MyHealthApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.teal,
-        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.teal,
+          primary: Colors.teal.shade800,
+          secondary: Colors.purple.shade700,
+          surface: const Color(0xFFF8F9FA),
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF4F6F8),
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.teal.shade900,
+          foregroundColor: Colors.white,
+        ),
         cardTheme: CardTheme(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 3,
+          shadowColor: Colors.black12,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
       darkTheme: ThemeData(
@@ -115,22 +127,37 @@ class MainShellView extends StatelessWidget {
       ];
 
       return Scaffold(
-        body: IndexedStack(
-          index: nav.selectedIndex.value,
-          children: pages,
+        body: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: pages[nav.selectedIndex.value],
         ),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: nav.selectedIndex.value,
-          onDestinationSelected: nav.changeTab,
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.dashboard_rounded), label: 'Dashboard'),
-            NavigationDestination(icon: Icon(Icons.favorite_rounded), label: 'Vitals'),
-            NavigationDestination(icon: Icon(Icons.science_rounded), label: 'Reproductive'),
-            NavigationDestination(icon: Icon(Icons.timeline_rounded), label: 'Timeline'),
-            NavigationDestination(icon: Icon(Icons.picture_as_pdf_rounded), label: 'Reports'),
-            NavigationDestination(icon: Icon(Icons.smart_toy_rounded), label: 'AI'),
-            NavigationDestination(icon: Icon(Icons.settings_rounded), label: 'Settings'),
-          ],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 16,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
+          child: NavigationBar(
+            height: 70,
+            elevation: 0,
+            indicatorColor: Colors.teal.shade100,
+            selectedIndex: nav.selectedIndex.value,
+            onDestinationSelected: nav.changeTab,
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard_rounded, color: Colors.teal), label: 'Dashboard'),
+              NavigationDestination(icon: Icon(Icons.favorite_outline), selectedIcon: Icon(Icons.favorite_rounded, color: Colors.teal), label: 'Vitals'),
+              NavigationDestination(icon: Icon(Icons.science_outlined), selectedIcon: Icon(Icons.science_rounded, color: Colors.purple), label: 'Reproductive'),
+              NavigationDestination(icon: Icon(Icons.timeline_outlined), selectedIcon: Icon(Icons.timeline_rounded, color: Colors.teal), label: 'Timeline'),
+              NavigationDestination(icon: Icon(Icons.picture_as_pdf_outlined), selectedIcon: Icon(Icons.picture_as_pdf_rounded, color: Colors.teal), label: 'Reports'),
+              NavigationDestination(icon: Icon(Icons.smart_toy_outlined), selectedIcon: Icon(Icons.smart_toy_rounded, color: Colors.purple), label: 'AI'),
+              NavigationDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings_rounded, color: Colors.teal), label: 'Settings'),
+            ],
+          ),
         ),
       );
     });
